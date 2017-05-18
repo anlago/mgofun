@@ -53,7 +53,7 @@ func getModelName(m interface{}) string {
 	return c
 }
 
-//Create
+// Create is ...
 func (m *MgoFun) Create() error {
 	//generate new object Id
 	id := reflect.ValueOf(m.model).Elem().FieldByName("Id")
@@ -64,7 +64,7 @@ func (m *MgoFun) Create() error {
 	return err
 }
 
-//General Save method
+// Save is  General Save method
 func (m *MgoFun) Save() error {
 	id := reflect.ValueOf(m.model).Elem().FieldByName("Id")
 	x := reflect.ValueOf(m.model).Elem().FieldByName("UpdatedAt")
@@ -73,7 +73,7 @@ func (m *MgoFun) Save() error {
 	return err
 }
 
-//General Save method
+//SaveWithoutTime is General Save method
 func (m *MgoFun) SaveWithoutTime() error {
 	id := reflect.ValueOf(m.model).Elem().FieldByName("Id")
 	_, err := m.collection.Upsert(bson.M{"_id": id.Interface()}, bson.M{"$set": m.model})
@@ -96,14 +96,14 @@ func (m *MgoFun) SaveWithLog(oldRecord interface{}, by, reason string) error {
 
 //SaveWithLog
 func (m *MgoFun) saveLog(record interface{}, by, reason string) error {
-	recordId := reflect.ValueOf(m.model).Elem().FieldByName("Id").Interface().(bson.ObjectId)
+	recordID := reflect.ValueOf(m.model).Elem().FieldByName("Id").Interface().(bson.ObjectId)
 
 	cl := new(ChangeLog)
 	cl.Id = bson.NewObjectId()
 	cl.CreatedBy = by
 	cl.CreatedAt = time.Now()
 	cl.ChangeReason = reason
-	cl.ModelObjId = recordId
+	cl.ModelObjId = recordID
 	cl.ModelName = getModelName(record)
 	cl.ModelValue = record
 	_, err := m.logCollection.Upsert(bson.M{"_id": cl.Id}, bson.M{"$set": cl})
@@ -133,7 +133,7 @@ func (m *MgoFun) Remove() error {
 	return err
 }
 
-//GenQuery export mgo.Query for further usage
+// Q GenQuery export mgo.Query for further usage
 func (m *MgoFun) Q() *mgo.Query {
 	return m.findQ()
 }
@@ -171,6 +171,7 @@ func (m *MgoFun) findQ() *mgo.Query {
 	return query
 }
 
+// findByIdQ is
 func (m *MgoFun) findByIdQ() *mgo.Query {
 	var query *mgo.Query
 	id := reflect.ValueOf(m.model).Elem().FieldByName("Id").Interface()
@@ -178,14 +179,13 @@ func (m *MgoFun) findByIdQ() *mgo.Query {
 	return query
 }
 
-//Count
+// Count is
 func (m *MgoFun) Count() int64 {
 	query := m.findQ()
 	count, _ := query.Count()
 	return int64(count)
 }
 
-//---------retrieve functions
 // FindAll except removed, i is interface address
 func (m *MgoFun) FindAll(i interface{}) error {
 	query := m.findQ()
@@ -207,7 +207,7 @@ func (m *MgoFun) GetByQ() error {
 	return err
 }
 
-//Select query and select columns
+//FindWithSelect is Select query and select columns
 func (m *MgoFun) FindWithSelect(i interface{}, cols []string) error {
 	sCols := bson.M{}
 	for _, v := range cols {
@@ -218,7 +218,7 @@ func (m *MgoFun) FindWithSelect(i interface{}, cols []string) error {
 	return err
 }
 
-//Distinct
+// Distinct is
 func (m *MgoFun) Distinct(key string, i interface{}) error {
 	err := m.findQ().Distinct(key, i)
 	return err

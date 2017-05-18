@@ -32,7 +32,7 @@ type BaseMod struct {
 	RemovedBy string        `bson:"RemovedBy,omitempty"`
 }
 
-//ChangeLog
+// ChangeLog is
 type ChangeLog struct {
 	BaseMod      `bson:",inline"`
 	ModelObjId   bson.ObjectId `bson:"ModelObjId,omitempty"`
