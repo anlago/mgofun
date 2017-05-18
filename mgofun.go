@@ -133,7 +133,7 @@ func (m *MgoFun) Remove() error {
 	return err
 }
 
-// Remove is softe delete
+// RemoveDel is  delete
 func (m *MgoFun) RemoveDel() error {
 	id := reflect.ValueOf(m.model).Elem().FieldByName("Id")
 	if !id.IsValid() {
